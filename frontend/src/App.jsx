@@ -15,6 +15,7 @@ function App() {
   const [showForm, setShowForm] = useState(false)
   const [editingRecipeId, setEditingRecipeId] = useState(null)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(12)
 
   const detailsRef = useRef(null)
   const formRef = useRef(null)
@@ -43,6 +44,10 @@ function App() {
   useEffect(() => {
     fetchRecipes()
   }, [])
+
+  useEffect(() => {
+    setVisibleCount(12)
+  }, [search, category])
 
   useEffect(() => {
     if (selectedRecipe && detailsRef.current) {
@@ -548,7 +553,7 @@ function App() {
 
         <div className="recipe-grid">
           {filteredRecipes.length > 0 ? (
-            filteredRecipes.map((recipe) => (
+            filteredRecipes.slice(0, visibleCount).map((recipe) => (
               <div className="recipe-card" key={recipe._id}>
                 {recipe.image && (
                   <img src={recipe.image} alt={recipe.name} />
@@ -583,6 +588,26 @@ function App() {
             </p>
           )}
         </div>
+
+        {filteredRecipes.length > 12 && (
+          <div className="show-more-container">
+            {visibleCount < filteredRecipes.length ? (
+              <button
+                className="show-more-button"
+                onClick={() => setVisibleCount(visibleCount + 12)}
+              >
+                Show More
+              </button>
+            ) : (
+              <button
+                className="show-more-button"
+                onClick={() => setVisibleCount(12)}
+              >
+                Show Less
+              </button>
+            )}
+          </div>
+        )}
 
         {selectedRecipe && (
           <div className="recipe-details" ref={detailsRef}>

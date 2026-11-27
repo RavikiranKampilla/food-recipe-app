@@ -423,3 +423,23 @@
     height: 220px;
   }
 }
+/* Show More and Show Less buttons */
+.show-more-container {
+  display: flex;
+  justify-content: center;
+  margin: 35px 0;
+}
+
+.show-more-button {
+  padding: 12px 30px;
+  background-color: #e76f35;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.show-more-button:hover {
+  background-color: #cf5d29;
+}
