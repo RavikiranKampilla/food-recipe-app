@@ -1,12 +1,12 @@
 
-import {useState, useEffect, useRef} from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import './App.css'
 
 function App() {
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-const API_URL = `${BASE_URL}/api/recipes`
-const AUTH_URL = `${BASE_URL}/api/auth`
+  const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+  const API_URL = `${BASE_URL}/api/recipes`
+  const AUTH_URL = `${BASE_URL}/api/auth`
 
   const [recipes, setRecipes] = useState([])
   const [search, setSearch] = useState('')
@@ -44,7 +44,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     fetchRecipes()
   }, [])
 
-  // Scroll to recipe details
   useEffect(() => {
     if (selectedRecipe && detailsRef.current) {
       detailsRef.current.scrollIntoView({
@@ -54,7 +53,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     }
   }, [selectedRecipe])
 
-  // Scroll to Add/Edit form
   useEffect(() => {
     if (showForm && formRef.current) {
       formRef.current.scrollIntoView({
@@ -73,7 +71,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     }
   }
 
-  // Login and registration
   async function handleAuth(e) {
     e.preventDefault()
 
@@ -100,7 +97,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
         email: '',
         password: ''
       })
-
     } catch (error) {
       alert(error.response?.data?.message || 'Something went wrong')
     }
@@ -113,7 +109,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     })
   }
 
-  // Logout
   function handleLogout() {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -126,7 +121,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     setAuthMode('')
   }
 
-  // Add Recipe button
   function handleAddButton() {
     if (!user) {
       return
@@ -136,7 +130,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     setShowForm(true)
   }
 
-  // Delete Account
   async function handleDeleteAccount() {
     const confirmed = window.confirm(
       'Are you sure you want to permanently delete your account and all your recipes? This action cannot be undone.'
@@ -159,7 +152,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
       await fetchRecipes()
 
       alert('Your account has been deleted successfully.')
-
     } catch (error) {
       console.error('Account deletion error:', error)
       alert(error.response?.data?.message || 'Unable to delete account')
@@ -172,7 +164,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
 
   const categories = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert']
 
-  // Search and category filtering
   const filteredRecipes = recipes.filter((recipe) => {
     const matchesSearch = recipe.name
       .toLowerCase()
@@ -204,7 +195,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     })
   }
 
-  // Add or update recipe
   async function handleAddRecipe(e) {
     e.preventDefault()
 
@@ -263,14 +253,12 @@ const AUTH_URL = `${BASE_URL}/api/auth`
 
       setEditingRecipeId(null)
       setShowForm(false)
-
     } catch (error) {
       console.error('Error saving recipe:', error)
       alert(error.response?.data?.message || 'Error saving recipe')
     }
   }
 
-  // Edit recipe
   function handleEditRecipe(recipe) {
     if (!isOwner(recipe)) {
       return
@@ -290,7 +278,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
     setShowForm(true)
   }
 
-  // Delete a recipe
   async function handleDeleteRecipe(id) {
     const confirmed = window.confirm(
       'Are you sure you want to delete this recipe?'
@@ -314,7 +301,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
       if (selectedRecipe?._id === id) {
         setSelectedRecipe(null)
       }
-
     } catch (error) {
       console.error('Error deleting recipe:', error)
       alert(error.response?.data?.message || 'Error deleting recipe')
@@ -337,13 +323,10 @@ const AUTH_URL = `${BASE_URL}/api/auth`
 
   return (
     <div className="app">
-
-      {/* Navbar */}
       <nav className="navbar">
         <h2>RecipeBook</h2>
 
         <div className="nav-actions">
-
           {user ? (
             <>
               <span className="welcome-text">
@@ -392,11 +375,9 @@ const AUTH_URL = `${BASE_URL}/api/auth`
               </button>
             </>
           )}
-
         </div>
       </nav>
 
-      {/* Login and Register Form */}
       {authMode && (
         <form className="auth-form" onSubmit={handleAuth}>
           <h2>
@@ -445,7 +426,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
         </form>
       )}
 
-      {/* Add/Edit Recipe Form */}
       {showForm && user && (
         <form
           className="recipe-form"
@@ -519,7 +499,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
         </form>
       )}
 
-      {/* Hero and Search */}
       <section className="hero">
         <h1>
           Discover Delicious <span>Recipes</span>
@@ -554,9 +533,7 @@ const AUTH_URL = `${BASE_URL}/api/auth`
         </p>
       </section>
 
-      {/* Recipe List */}
       <section className="recipe-section" ref={resultsRef}>
-
         <div className="categories">
           {categories.map((item) => (
             <button
@@ -573,7 +550,6 @@ const AUTH_URL = `${BASE_URL}/api/auth`
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <div className="recipe-card" key={recipe._id}>
-
                 {recipe.image && (
                   <img src={recipe.image} alt={recipe.name} />
                 )}
@@ -583,23 +559,17 @@ const AUTH_URL = `${BASE_URL}/api/auth`
                   <h3>{recipe.name}</h3>
                   <p>⏱ {recipe.time}</p>
 
-                  <button
-                    onClick={() => setSelectedRecipe(recipe)}
-                  >
+                  <button onClick={() => setSelectedRecipe(recipe)}>
                     View Recipe
                   </button>
 
                   {isOwner(recipe) && (
                     <>
-                      <button
-                        onClick={() => handleEditRecipe(recipe)}
-                      >
+                      <button onClick={() => handleEditRecipe(recipe)}>
                         Edit
                       </button>
 
-                      <button
-                        onClick={() => handleDeleteRecipe(recipe._id)}
-                      >
+                      <button onClick={() => handleDeleteRecipe(recipe._id)}>
                         Delete
                       </button>
                     </>
@@ -614,10 +584,8 @@ const AUTH_URL = `${BASE_URL}/api/auth`
           )}
         </div>
 
-        {/* Recipe Details */}
         {selectedRecipe && (
           <div className="recipe-details" ref={detailsRef}>
-
             {selectedRecipe.image && (
               <img
                 src={selectedRecipe.image}
@@ -643,10 +611,8 @@ const AUTH_URL = `${BASE_URL}/api/auth`
             <button onClick={() => setSelectedRecipe(null)}>
               Close
             </button>
-
           </div>
         )}
-
       </section>
     </div>
   )
