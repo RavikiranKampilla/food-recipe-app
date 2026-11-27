@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import axios from 'axios'
 import './App.css'
 
@@ -169,16 +169,20 @@ function App() {
 
   const categories = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Dessert']
 
-  const filteredRecipes = recipes.filter((recipe) => {
-    const matchesSearch = recipe.name
-      .toLowerCase()
-      .includes(search.toLowerCase().trim())
+  const filteredRecipes = useMemo(() => {
+    const searchText = search.toLowerCase().trim()
 
-    const matchesCategory =
-      category === 'All' || recipe.category === category
+    return recipes.filter((recipe) => {
+      const matchesSearch = recipe.name
+        .toLowerCase()
+        .includes(searchText)
 
-    return matchesSearch && matchesCategory
-  })
+      const matchesCategory =
+        category === 'All' || recipe.category === category
+
+      return matchesSearch && matchesCategory
+    })
+  }, [recipes, search, category])
 
   function handleSearchSubmit(e) {
     e.preventDefault()
@@ -556,7 +560,7 @@ function App() {
             filteredRecipes.slice(0, visibleCount).map((recipe) => (
               <div className="recipe-card" key={recipe._id}>
                 {recipe.image && (
-                  <img src={recipe.image} alt={recipe.name} />
+                  <img src={recipe.image} alt={recipe.name} loading="lazy" decoding="async" />
                 )}
 
                 <div className="recipe-info">
@@ -616,6 +620,8 @@ function App() {
                 src={selectedRecipe.image}
                 alt={selectedRecipe.name}
                 className="detail-image"
+                loading="lazy"
+                decoding="async"
               />
             )}
 
